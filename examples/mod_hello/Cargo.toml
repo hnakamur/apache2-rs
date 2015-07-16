@@ -12,3 +12,4 @@ interpolate_idents = "*"
 
 [dependencies.apache2]
 path = "../.."
+features = ["apache22"]

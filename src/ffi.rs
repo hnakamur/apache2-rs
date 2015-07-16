@@ -129,9 +129,15 @@ pub fn strdup<T: Into<Vec<u8>>>(pool: *mut apr_pool_t, data: T) -> *mut c_char {
 
 // APACHE HTTPD
 
+#[cfg(not(feature = "apache22"))]
 pub const MODULE_MAGIC_COOKIE: c_ulong = 0x41503234u64; /* "AP24" */
+#[cfg(feature = "apache22")]
+pub const MODULE_MAGIC_COOKIE: c_ulong = 0x41503232u64; /* "AP22" */
 
+#[cfg(not(feature = "apache22"))]
 pub const MODULE_MAGIC_NUMBER_MAJOR: c_int = 20120211;
+#[cfg(feature = "apache22")]
+pub const MODULE_MAGIC_NUMBER_MAJOR: c_int = 20051115;
 pub const MODULE_MAGIC_NUMBER_MINOR: c_int = 36;
 
 pub const OK:        c_int = 0;
@@ -557,7 +563,9 @@ extern "C" {
    pub fn ap_set_content_type(r: *const request_rec, ct: *const c_char) -> ();
    pub fn ap_get_basic_auth_pw(r: *const request_rec, pw: *mut *const c_char) -> c_int;
 
+   #[cfg(not(feature = "apache22"))]
    pub fn ap_context_document_root(r: *const request_rec) -> *const c_char;
+   #[cfg(not(feature = "apache22"))]
    pub fn ap_context_prefix(r: *const request_rec) -> *const c_char;
 
    pub fn ap_run_http_scheme(r: *const request_rec) -> *const c_char;
@@ -568,6 +576,7 @@ extern "C" {
    pub fn ap_some_auth_required(r: *const request_rec) -> c_int;
 
    pub fn ap_cookie_read(r: *const request_rec, name: *const c_char, val: *mut *const c_char, remove: c_int) -> apr_status_t;
+   #[cfg(not(feature = "apache22"))]
    pub fn ap_cookie_write(r: *const request_rec, name: *const c_char, val: *const c_char, attrs: *const c_char, maxage: c_int, ...) -> apr_status_t;
 
    pub fn ap_escape_urlencoded(p: *mut apr_pool_t, s: *const c_char) -> *mut c_char;
@@ -587,6 +596,7 @@ extern "C" {
    pub fn ap_register_provider(pool: *mut apr_pool_t, provider_group: *const c_char, provider_name: *const c_char, provider_version: *const c_char, provider: *const c_void) -> apr_status_t;
    pub fn ap_lookup_provider(provider_group: *const c_char, provider_name: *const c_char, provider_version: *const c_char) -> *mut c_void;
    pub fn ap_list_provider_names(pool: *mut apr_pool_t, provider_group: *const c_char, provider_version: *const c_char) -> *mut apr_array_header_t;
+   #[cfg(not(feature = "apache22"))]
    pub fn ap_list_provider_groups(pool: *mut apr_pool_t) -> *mut apr_array_header_t;
 
    pub fn ap_hook_handler(f: Option<hook_handler_fn>, pre: *const *const c_char, succ: *const *const c_char, order: c_int);

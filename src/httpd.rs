@@ -12,6 +12,7 @@ use ffi;
 use wrapper::{Wrapper, from_char_ptr, FromRaw};
 
 use apr::{Table, Pool, ArrayHeaderIter};
+#[cfg(not(feature = "apache22"))]
 use cookie::Cookie;
 
 
@@ -514,12 +515,14 @@ impl Request {
 
    }
 
+   #[cfg(not(feature = "apache22"))]
    pub fn context_document_root<'a>(&self) -> Option<&'a str> {
       from_char_ptr(
          unsafe { ffi::ap_context_document_root(self.ptr) }
       )
    }
 
+   #[cfg(not(feature = "apache22"))]
    pub fn context_prefix<'a>(&self) -> Option<&'a str> {
       from_char_ptr(
          unsafe { ffi::ap_context_prefix(self.ptr) }
@@ -555,6 +558,7 @@ impl Request {
       from_char_ptr(val)
    }
 
+   #[cfg(not(feature = "apache22"))]
    pub fn set_cookie(&self, cookie: Cookie) {
       let c_str_name = ffi::strdup(field!(self, pool), cookie.name);
       let c_str_val = ffi::strdup(field!(self, pool), cookie.value);
@@ -701,6 +705,7 @@ impl ListProviderName {
 }
 
 
+#[cfg(not(feature = "apache22"))]
 pub fn list_provider_groups(pool: &mut Pool) -> ArrayHeaderIter<ListProviderGroup> {
    let ptr = unsafe { ffi::ap_list_provider_groups(pool.ptr) };
 

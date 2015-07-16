@@ -3,6 +3,10 @@
 name = "apache2"
 version = "0.0.2"
 
+[features]
+default = []
+apache22 = []
+
 [dependencies]
 libc = "*"
 interpolate_idents = "*"
